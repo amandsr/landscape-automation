@@ -1,10 +1,6 @@
-variable "key_name" {
-  description = "SSH key pair name"
-}
-
-variable "public_key_path" {
-  description = "Path to your public key"
-  default = "~/.ssh/id_rsa.pub"
+variable "ssh_public_key" {
+  description = "The public SSH key to use for the EC2 instance."
+  type        = string
 }
 
 variable "instance_type" {
