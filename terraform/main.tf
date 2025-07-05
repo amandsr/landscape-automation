@@ -1,3 +1,4 @@
+#main file
 resource "aws_key_pair" "landscape_key" {
   key_name   = "landscape"
   public_key = var.ssh_public_key
