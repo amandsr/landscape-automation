@@ -15,7 +15,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket = "s3backend-gha"
+    bucket = "s3backend-ghb"
     key    = "landscape.tfstate"
     region = "us-east-1"
     encrypt = true  # Optional: Encrypt the state file in S3
