@@ -6,9 +6,10 @@ env:
     TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
 
 on:
-  push:
-    branches: 
-      - main
+  workflow_dispatch:
+  #push:
+  #  branches: 
+  #    - main
 
 permissions:
   contents: read
