@@ -6,11 +6,7 @@ env:
     TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
     TF_VAR_BACKEND_BUCKET: ${{ secrets.TF_VAR_BACKEND_BUCKET }}
     TF_VAR_BACKEND_KEY: ${{ secrets.TF_VAR_BACKEND_KEY }}
-
-permissions:
-  actions: write
-  contents: write
-
+    
 on:
   workflow_dispatch:
   #push:
@@ -18,7 +14,8 @@ on:
   #    - main
 
 permissions:
-  contents: read
+  actions: write
+  contents: write
 
 jobs:
   terraform_validate:
