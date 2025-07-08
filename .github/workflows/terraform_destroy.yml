@@ -49,8 +49,8 @@ jobs:
       - name: Terraform Init
         run: |
           terraform -chdir=./terraform init \
-            -backend-config="bucket=${{ secrets.TF_BACKEND_BUCKET }}" \
-            -backend-config="key=${{ secrets.TF_BACKEND_KEY }}"
+            -backend-config="bucket=${{ secrets.TF_VAR_BACKEND_BUCKET }}" \
+            -backend-config="key=${{ secrets.TF_VAR_BACKEND_KEY }}"
         
       - name: Terraform fmt
         run: terraform fmt
@@ -76,8 +76,8 @@ jobs:
       - name: Terraform Init
         run: |
           terraform -chdir=./terraform init \
-            -backend-config="bucket=${{ secrets.TF_BACKEND_BUCKET }}" \
-            -backend-config="key=${{ secrets.TF_BACKEND_KEY }}"
+            -backend-config="bucket=${{ secrets.TF_VAR_BACKEND_BUCKET }}" \
+            -backend-config="key=${{ secrets.TF_VAR_BACKEND_KEY }}"
 
       - name: Terraform Destroy Plan
         run:  terraform plan -destroy -input=false
@@ -99,8 +99,8 @@ jobs:
       - name: Terraform Init
         run: |
           terraform -chdir=./terraform init \
-            -backend-config="bucket=${{ secrets.TF_BACKEND_BUCKET }}" \
-            -backend-config="key=${{ secrets.TF_BACKEND_KEY }}"
+            -backend-config="bucket=${{ secrets.TF_VAR_BACKEND_BUCKET }}" \
+            -backend-config="key=${{ secrets.TF_VAR_BACKEND_KEY }}"
 
       - name: Terraform Plan
         run: terraform plan -destroy
