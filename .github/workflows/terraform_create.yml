@@ -92,3 +92,10 @@ jobs:
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false
         working-directory: ./terraform
+
+      - name: Export EC2 DNS to GitHub variable
+        run: |
+             DNS=$(terraform output -raw ec2_public_dns)
+             gh variable set EC2_PUBLIC_DNS --body "$DNS"
+        env:
+             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
