@@ -4,6 +4,8 @@ env:
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     AWS_DEFAULT_REGION: 'us-east-1'
     TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
+    TF_VAR_BACKEND_BUCKET: ${{ secrets.TF_VAR_BACKEND_BUCKET }}
+    TF_VAR_BACKEND_KEY: ${{ secrets.TF_VAR_BACKEND_KEY }}
 
 on:
   workflow_dispatch:
@@ -28,7 +30,10 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         
       - name: Terraform Init
-        run: terraform init
+        id: init # Keep the ID if other steps refer to it (e.g., for outputs)
+        run: terraform init \
+             -backend-config="bucket=${{ secrets.TF_BACKEND_BUCKET }}" \
+             -backend-config="key=${{ secrets.TF_BACKEND_KEY }}"
         working-directory: ./terraform
         
       - name: Terraform fmt
@@ -53,7 +58,10 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         
       - name: Terraform Init
-        run: terraform init
+        id: init # Keep the ID if other steps refer to it (e.g., for outputs)
+        run: terraform init \
+             -backend-config="bucket=${{ secrets.TF_BACKEND_BUCKET }}" \
+             -backend-config="key=${{ secrets.TF_BACKEND_KEY }}"
         working-directory: ./terraform
         
       - name: Terraform Plan
@@ -74,7 +82,10 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Terraform Init
-        run: terraform init
+        id: init # Keep the ID if other steps refer to it (e.g., for outputs)
+        run: terraform init \
+             -backend-config="bucket=${{ secrets.TF_BACKEND_BUCKET }}" \
+             -backend-config="key=${{ secrets.TF_BACKEND_KEY }}"
         working-directory: ./terraform
 
       - name: Terraform Plan
