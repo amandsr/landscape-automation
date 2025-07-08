@@ -31,10 +31,9 @@ jobs:
         
       - name: Terraform Init
         id: init # Keep the ID if other steps refer to it (e.g., for outputs)
-        run: terraform init \
+        run: terraform -chdir=./terraform init \
              -backend-config="bucket=${{ secrets.TF_BACKEND_BUCKET }}" \
              -backend-config="key=${{ secrets.TF_BACKEND_KEY }}"
-        working-directory: ./terraform
         
       - name: Terraform fmt
         run: terraform fmt
