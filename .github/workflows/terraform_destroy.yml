@@ -4,6 +4,8 @@ env:
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     AWS_DEFAULT_REGION: 'us-east-1'
     TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
+    TF_VAR_BACKEND_BUCKET: ${{ secrets.TF_VAR_BACKEND_BUCKET }}
+    TF_VAR_BACKEND_KEY: ${{ secrets.TF_VAR_BACKEND_KEY }}
 
 on:
   workflow_dispatch:
