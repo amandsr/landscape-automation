@@ -1,0 +1,36 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install PostgreSQL packages
+  apt:
+    name:
+      - postgresql
+      - postgresql-16-debversion
+      - postgresql-plpython3-16
+      - postgresql-contrib
+    state: present
+
+- name: Upload the user creation script
+  template:
+    src: create_landscape_user.sh.j2
+    dest: /tmp/create_landscape_user.sh
+    mode: '0700'
+
+- name: Execute the script on remote host
+  shell: /tmp/create_landscape_user.sh
+
+- name: Update pg_hba.conf
+  lineinfile:
+    path: /etc/postgresql/16/main/pg_hba.conf
+    line: "host all landscape,landscape_maintenance,landscape_superuser 127.0.0.1/32 md5"
+    create: yes
+
+- name: Run update_postgres_conf.sh
+  script: update_postgres_conf.sh
+
+- name: Restart PostgreSQL
+  service:
+    name: postgresql
+    state: restarted
+

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+LANDSCAPE_PASS='{{ landscape_password }}'
+
+sudo -u postgres psql <<EOF
+DO
+\$do\$
+BEGIN
+   IF NOT EXISTS (
+      SELECT FROM pg_catalog.pg_roles WHERE rolname = 'landscape_superuser'
+   ) THEN
+      CREATE ROLE landscape_superuser
+      WITH SUPERUSER CREATEDB CREATEROLE LOGIN PASSWORD '${LANDSCAPE_PASS}';
+      RAISE NOTICE 'User created successfully.';
+   ELSE
+      RAISE NOTICE 'User already exists. Skipping creation.';
+   END IF;
+END
+\$do\$;
+EOF
+

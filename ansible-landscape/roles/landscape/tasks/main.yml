@@ -1,0 +1,14 @@
+- name: Configure PostgreSQL
+  import_tasks: 01_postgres.yml
+
+- name: Setup RabbitMQ
+  import_tasks: 02_rabbitmq.yml
+
+- name: Install and configure Landscape Server
+  import_tasks: 03_landscape.yml
+
+- name: Generate and copy SSL certificates
+  import_tasks: 04_ssl.yml
+
+- name: Setup Apache for Landscape
+  import_tasks: 05_apache.yml

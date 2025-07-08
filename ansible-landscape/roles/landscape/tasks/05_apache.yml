@@ -1,0 +1,35 @@
+- name: Create Apache site config for Landscape
+  ansible.builtin.template:
+    src: landscape.conf.j2         # Path to your template on the control node
+    dest: /etc/apache2/sites-available/landscape.conf # Absolute path on the remote node
+    owner: root
+    group: root
+    mode: '0644'                   # Standard permissions for config files
+  become: yes                      # Requires root to write to /etc/apache2
+
+- name: Update Apache site config
+  ansible.builtin.script: update_apache_config.py
+  environment:
+    # This directly sets LANDSCAPE_HOSTNAME for the execution of update_apache_config.py
+    LANDSCAPE_HOSTNAME: "{{ landscape_hostname }}"
+
+- name: Enable required Apache modules
+  shell: |
+    for module in rewrite proxy_http ssl headers expires proxy_http2; do a2enmod $module; done
+
+- name: Disable unused modules/sites
+  shell: |
+    a2dismod status
+    a2dissite 000-default
+
+- name: Enable Landscape site
+  command: a2ensite landscape.conf
+
+- name: Restart Landscape services via lsctl
+  ansible.builtin.command: lsctl restart
+
+- name: Restart Apache
+  service:
+    name: apache2
+    state: restarted
+

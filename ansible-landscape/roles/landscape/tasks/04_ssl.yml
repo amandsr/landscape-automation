@@ -1,0 +1,32 @@
+- name: Create ssl-cert directory
+  file:
+    path: ~/ssl-cert
+    state: directory
+
+- name: Copy ssl_create.sh
+  copy:
+    src: ssl_create.sh
+    dest: ~/ssl-cert/ssl_create.sh
+    mode: '0755'
+
+- name: Run SSL certificate creation script
+  command: >
+    ./ssl_create.sh -c {{ country }} -s {{ state }} -l "{{ locality }}"
+    -o {{ org }} -u {{ unit }} -n {{ landscape_hostname }}
+    -a DNS:{{ landscape_hostname }},IP:{{ landscape_ip }}
+    -d {{ ssl_days }} -k {{ landscape_hostname }}.key -t {{ landscape_hostname }}.crt
+  args:
+    chdir: ~/ssl-cert
+
+- name: Copy SSL cert and key to /etc/ssl/certs
+  copy:
+    src: "/root/ssl-cert/{{ item }}"
+    dest: "/etc/ssl/certs/{{ item }}"
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0644'
+  loop:
+    - "{{ landscape_hostname }}.crt"
+    - "{{ landscape_hostname }}.key"
+

@@ -1,0 +1,41 @@
+- name: Add Landscape PPA
+  apt_repository:
+    repo: ppa:landscape/latest-stable
+    state: present
+
+- name: Install RabbitMQ and Apache2
+  apt:
+    name:
+      - rabbitmq-server
+      - apache2
+    state: present
+
+- name: Run install_landscape.sh
+  script: install_landscape.sh
+
+- name: Check if 'landscape' RabbitMQ user exists
+  command: rabbitmqctl list_users -q
+  register: rabbitmq_users_list
+  changed_when: false # This command just queries state, doesn't change anything
+
+- name: Add rabbitmq user 'landscape'
+  command: rabbitmqctl add_user landscape "{{ rabbitmq_password }}"
+  when: "'landscape' not in rabbitmq_users_list.stdout"
+  no_log: true # Prevent password from appearing in logs
+  changed_when: true # This task explicitly changes something if it runs
+
+- name: Add vhosts and set permissions
+  shell: |
+    rabbitmqctl add_vhost landscape
+    rabbitmqctl set_permissions -p landscape landscape ".*" ".*" ".*"
+    rabbitmqctl add_vhost landscape-hostagent
+    rabbitmqctl set_permissions -p landscape-hostagent landscape ".*" ".*" ".*"
+
+- name: Update rabbitmq-env.conf
+  script: update_rabbitmq.sh
+
+- name: Restart RabbitMQ
+  service:
+    name: rabbitmq-server
+    state: restarted
+

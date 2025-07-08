@@ -1,0 +1,6 @@
+- name: Setup Ubuntu Landscape Server
+  hosts: landscape
+  become: true
+  roles:
+    - landscape
+

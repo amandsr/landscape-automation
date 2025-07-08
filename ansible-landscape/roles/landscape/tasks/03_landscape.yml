@@ -1,0 +1,15 @@
+- name: Update landscape service config
+  script: landscape_service_conf.py
+  environment:
+    DB_LANDSCAPE_PASSWORD: "{{ landscape_db_password }}"
+    RABBITMQ_PASSWORD: "{{ rabbitmq_password }}"
+    DB_SUPERUSER_NAME: "{{ db_superuser }}"
+    DB_SUPERUSER_PASSWORD: "{{ db_superuser_password }}"
+  become: yes # Example
+
+- name: Setup Landscape server
+  command: setup-landscape-server
+
+- name: Update /etc/default/landscape-server
+  script: update_landscape_cofig.sh
+
