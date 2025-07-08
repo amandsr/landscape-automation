@@ -57,11 +57,10 @@ jobs:
         uses: hashicorp/setup-terraform@v1
         
       - name: Terraform Init
-        id: init # Keep the ID if other steps refer to it (e.g., for outputs)
-        run: terraform init \
-             -backend-config="bucket=${{ secrets.TF_BACKEND_BUCKET }}" \
-             -backend-config="key=${{ secrets.TF_BACKEND_KEY }}"
-        working-directory: ./terraform
+        run: |
+          terraform -chdir=./terraform init \
+            -backend-config="bucket=${{ secrets.TF_BACKEND_BUCKET }}" \
+            -backend-config="key=${{ secrets.TF_BACKEND_KEY }}"
         
       - name: Terraform Plan
         run: terraform plan -input=false
@@ -81,11 +80,10 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Terraform Init
-        id: init # Keep the ID if other steps refer to it (e.g., for outputs)
-        run: terraform init \
-             -backend-config="bucket=${{ secrets.TF_BACKEND_BUCKET }}" \
-             -backend-config="key=${{ secrets.TF_BACKEND_KEY }}"
-        working-directory: ./terraform
+        run: |
+          terraform -chdir=./terraform init \
+            -backend-config="bucket=${{ secrets.TF_BACKEND_BUCKET }}" \
+            -backend-config="key=${{ secrets.TF_BACKEND_KEY }}"
 
       - name: Terraform Plan
         run: terraform plan -input=false
