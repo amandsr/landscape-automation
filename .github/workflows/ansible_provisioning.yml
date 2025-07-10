@@ -19,12 +19,12 @@ jobs:
 
       - name: Update landscape_hostname and landscape_ip in all.yml
         run: |
-          echo "Public DNS: $EC2_PUBLIC_DNS"
-          echo "Public IP: $EC2_PUBLIC_IP"
+          echo "DNS: ${{ vars.EC2_PUBLIC_DNS }}"
+          echo "IP: ${{ vars.EC2_PUBLIC_IP }}"
 
           # Use sed to update the YAML values
-          sed -i "s|^landscape_hostname:.*|landscape_hostname: $EC2_PUBLIC_DNS|" ansible-landscape/group_vars/all.yml
-          sed -i "s|^landscape_ip:.*|landscape_ip: $EC2_PUBLIC_IP|" ansible-landscape/group_vars/all.yml
+          sed -i "s|^landscape_hostname:.*|landscape_hostname: ${{ vars.EC2_PUBLIC_DNS }}|" ansible-landscape/group_vars/all.yml
+          sed -i "s|^landscape_ip:.*|landscape_ip: ${{ vars.EC2_PUBLIC_IP }}|" ansible-landscape/group_vars/all.yml
 
           echo "Updated group_vars/all.yml:"
           cat ansible-landscape/group_vars/all.yml
