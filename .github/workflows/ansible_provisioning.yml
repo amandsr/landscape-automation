@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Use EC2 Public IP
-        run: echo "The EC2 IP is ${{ vars.PUBLIC_IP }}"
+        run: echo "The EC2 IP is ${{ vars.EC2_PUBLIC_IP }}"
 
       - name: Use EC2 DNS
-        run: echo "The EC2 DNS is ${{ vars.DNS }}"
+        run: echo "The EC2 DNS is ${{ vars.EC2_PUBLIC_DNS }}"
 
     
