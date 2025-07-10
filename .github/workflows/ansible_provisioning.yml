@@ -30,6 +30,11 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
+      - name: Add target host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H 3.237.106.89 >> ~/.ssh/known_hosts
+          
       - name: Install Ansible
         run: |
           sudo apt-get update
