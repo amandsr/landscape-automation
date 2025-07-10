@@ -97,11 +97,11 @@ jobs:
       - name: Export EC2 DNS to GitHub variable
         run: |
              echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
-             DNS=$(terraform output -raw ec2_public_dns)
+             DNS=$(terraform -chdir=./terraform output -raw ec2_public_dns)
              gh variable set EC2_PUBLIC_DNS --body "$DNS"
 
       - name: Export EC2 Public IP to GitHub variable
         run: |
              echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
-             PUBLIC_IP=$(terraform output -raw ec2_public_ip)
+             PUBLIC_IP=$(terraform -chdir=./terraform output -raw ec2_public_ip)
              gh variable set EC2_PUBLIC_IP --body "$PUBLIC_IP"
