@@ -11,6 +11,9 @@ jobs:
   use-ec2-ip:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        
       - name: Use EC2 Public IP
         run: echo "The EC2 IP is ${{ vars.EC2_PUBLIC_IP }}"
 
