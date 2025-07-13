@@ -40,6 +40,11 @@ resource "aws_instance" "landscape" {
   instance_type = var.instance_type
   key_name      = aws_key_pair.landscape_key.id
   security_groups = [aws_security_group.landscape_sg.name]
+  root_block_device {
+    volume_size = 20 # Specify the desired size in GB
+    volume_type = "gp2"
+    delete_on_termination = true
+  }
 
   tags = {
     Name = "LandscapeServer"
