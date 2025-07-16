@@ -1,10 +1,10 @@
-resource "aws_key_pair" "landscape_key" {
-  key_name   = "landscape"
+resource "aws_key_pair" "landscape_client_key" {
+  key_name   = "landscape_client"
   public_key = var.ssh_public_key
 }
 
-resource "aws_security_group" "landscape_sg" {
-  name        = "landscape_sg"
+resource "aws_security_group" "landscape_client_sg" {
+  name        = "landscape_client_sg"
 
   ingress {
     from_port   = 22
@@ -35,11 +35,11 @@ resource "aws_security_group" "landscape_sg" {
   }
 }
 
-resource "aws_instance" "landscape" {
+resource "aws_instance" "landscape_client" {
   ami           = "ami-020cba7c55df1f615" # Ubuntu 24
   instance_type = var.instance_type
-  key_name      = aws_key_pair.landscape_key.id
-  security_groups = [aws_security_group.landscape_sg.name]
+  key_name      = aws_key_pair.landscape_client_key.id
+  security_groups = [aws_security_group.landscape_client_sg.name]
 
   tags = {
     Name = "Landscape-client"
