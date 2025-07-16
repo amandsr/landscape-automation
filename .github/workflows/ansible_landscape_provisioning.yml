@@ -1,4 +1,4 @@
-name: 'Landscape Server Provision Workflow'
+name: 'Landscape Server Ansible Provision Workflow'
     
 on:
   workflow_dispatch:
