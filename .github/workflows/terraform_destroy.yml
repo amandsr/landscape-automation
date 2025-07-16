@@ -1,4 +1,4 @@
-name: 'Terraform Destroy'
+name: 'Landscape Server Terraform Destroy Workflow'
 env:
     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -15,21 +15,21 @@ permissions:
 
 jobs:
   check-terraform-create:
-    name: Check "Terraform Create Workflow" Success
+    name: Check "Landscape Server Terraform Create Workflow" Success
     runs-on: ubuntu-latest
     steps:
-      - name: Check last successful run of "Terraform Create Workflow"
+      - name: Check last successful run of "Landscape Server Terraform Create Workflow"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Checking last successful run of 'Terraform Create Workflow'"
+          echo "Checking last successful run of 'Landscape Server Terraform Create Workflow'"
           gh run list \
             --repo "${{ github.repository }}" \
-            --workflow="Terraform Create Workflow" \
+            --workflow="Landscape Server Terraform Create Workflow" \
             --limit 1 \
             --json status,conclusion \
             --jq '.[0] | select(.status == "completed" and .conclusion == "success")' || {
-            echo "❌ Last run of Terraform Create Workflow did not succeed."
+            echo "❌ Last run of Landscape Server Terraform Create Workflow did not succeed."
             exit 1
             }
 
