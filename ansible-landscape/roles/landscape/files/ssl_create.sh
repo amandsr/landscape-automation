@@ -28,11 +28,12 @@ fi
 CONFIG_FILE="openssl.conf"
 cat > "$CONFIG_FILE" <<EOF
 [ req ]
-default_bits       = 2048
-prompt             = no
-default_md         = sha256
-distinguished_name = dn
-req_extensions     = req_ext
+default_bits        = 2048
+prompt              = no
+default_md          = sha256
+distinguished_name  = dn
+req_extensions      = v3_req # For CSRs, also needed for req -x509 to look for extensions
+x509_extensions     = v3_req # <<< CRITICAL: This tells openssl -x509 to apply the extensions to the cert itself
 
 [ dn ]
 C=$COUNTRY
@@ -42,8 +43,10 @@ O=$ORG
 OU=$UNIT
 CN=$CN
 
-[ req_ext ]
-subjectAltName = $ALT_NAMES
+[ v3_req ] # <<< Renamed from req_ext to v3_req (standard practice)
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth # Essential for server certificates
+subjectAltName = $ALT_NAMES # This is still correct
 EOF
 
 # === Generate Private Key and Certificate ===
@@ -54,4 +57,3 @@ openssl req -x509 -nodes -days "$DAYS" -newkey rsa:2048 \
 
 echo "✅ SSL certificate generated: $CRT_FILE"
 echo "✅ Private key generated: $KEY_FILE"
-

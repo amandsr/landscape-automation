@@ -79,6 +79,8 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
 
       - name: Terraform Init
         run: |
@@ -97,11 +99,15 @@ jobs:
       - name: Export EC2 DNS to GitHub variable
         run: |
              echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
-             DNS=$(terraform output -raw ec2_public_dns)
-             gh variable set EC2_PUBLIC_DNS --body "$DNS"
+             DNS=$(terraform -chdir=./terraform output -raw ec2_public_dns)
+             echo "Public DNS from Terraform: $DNS"
+             #echo "$DNS" | gh variable set EC2_PUBLIC_DNS --body -
+             gh variable set EC2_PUBLIC_DNS --body "$DNS"             
 
       - name: Export EC2 Public IP to GitHub variable
         run: |
              echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
-             PUBLIC_IP=$(terraform output -raw ec2_public_ip)
+             PUBLIC_IP=$(terraform -chdir=./terraform output -raw public_ip)
+             echo "Public IP from Terraform: $PUBLIC_IP"
+             #echo "$PUBLIC_IP" | gh variable set EC2_PUBLIC_IP --body -
              gh variable set EC2_PUBLIC_IP --body "$PUBLIC_IP"

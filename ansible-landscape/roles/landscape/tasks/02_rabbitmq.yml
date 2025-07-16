@@ -1,6 +1,6 @@
 - name: Add Landscape PPA
   apt_repository:
-    repo: ppa:landscape/latest-stable
+    repo: ppa:landscape/self-hosted-24.04
     state: present
 
 - name: Install RabbitMQ and Apache2
