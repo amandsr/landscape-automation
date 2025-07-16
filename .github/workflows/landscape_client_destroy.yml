@@ -1,23 +1,42 @@
-name: 'Landscape client provisioning'
+name: 'Terraform Client Destroy'
 env:
     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     AWS_DEFAULT_REGION: 'us-east-1'
     TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_ssh_public_key }}
     TF_VAR_BACKEND_BUCKET: ${{ secrets.TF_VAR_BACKEND_BUCKET }}
-    TF_VAR_CLIENT_BACKEND_KEY: ${{ secrets.TF_VAR_CLIENT_BACKEND_KEY }}
-    
+    TF_VAR_BACKEND_KEY: ${{ secrets.TF_VAR_CLIENT_BACKEND_KEY }}
+
 on:
   workflow_dispatch:
 
 permissions:
-  actions: write
-  contents: write
+  contents: read
 
 jobs:
+  check-terraform-create:
+    name: Check "Landscape client provisioning" Success
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check last successful run of "Landscape client provisioning"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Checking last successful run of 'Landscape client provisioning'"
+          gh run list \
+            --repo "${{ github.repository }}" \
+            --workflow="Landscape client provisioning" \
+            --limit 1 \
+            --json status,conclusion \
+            --jq '.[0] | select(.status == "completed" and .conclusion == "success")' || {
+            echo "❌ Last run of Landscape client provisioning did not succeed."
+            exit 1
+            }
+
   terraform_validate:
     name: 'Terraform Init'
     runs-on: ubuntu-latest
+    needs: check-terraform-create
     environment: production
 
     steps:
@@ -41,8 +60,8 @@ jobs:
         run: terraform validate
         working-directory: ./terraform-client
 
-  terraform_plan:
-    name: 'Terraform Plan'
+  terraform_destroy_plan:
+    name: 'Terraform Destroy Plan'
     runs-on: ubuntu-latest
     needs: terraform_validate  # Ensure this job runs after the init job
     environment: production
@@ -59,15 +78,15 @@ jobs:
           terraform -chdir=./terraform-client init \
             -backend-config="bucket=${{ secrets.TF_VAR_BACKEND_BUCKET }}" \
             -backend-config="key=${{ secrets.TF_VAR_CLIENT_BACKEND_KEY }}"
-        
-      - name: Terraform Plan
-        run: terraform plan -input=false
+
+      - name: Terraform Destroy Plan
+        run:  terraform plan -destroy -input=false
         working-directory: ./terraform-client
 
-  terraform_apply:
-    name: 'Terraform Apply'
+  terraform_destroy:
+    name: 'Terraform Destroy'
     runs-on: ubuntu-latest
-    needs: terraform_plan  # Ensure this job runs after the plan job
+    needs: terraform_destroy_plan
     environment: production
 
     steps:
@@ -84,21 +103,9 @@ jobs:
             -backend-config="key=${{ secrets.TF_VAR_CLIENT_BACKEND_KEY }}"
 
       - name: Terraform Plan
-        run: terraform plan -input=false
+        run: terraform plan -destroy
         working-directory: ./terraform-client
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false
-        working-directory: ./terraform
-
-      - name: Export EC2 DNS to GitHub variable
-        run: |
-             echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
-             DNS=$(terraform output -raw ec2_public_dns)
-             gh variable set EC2_PUBLIC_DNS --body "$DNS"
-
-      - name: Export EC2 Public IP to GitHub variable
-        run: |
-             echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
-             PUBLIC_IP=$(terraform output -raw ec2_public_ip)
-             gh variable set EC2_PUBLIC_IP --body "$PUBLIC_IP"
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -input=false
+        working-directory: ./terraform-client
