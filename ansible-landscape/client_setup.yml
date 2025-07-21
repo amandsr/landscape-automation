@@ -5,12 +5,7 @@
   vars_files:
     - group_vars/client_var.yml
 
-  tasks:
-    - name: Setup SSH key
-        uses: webfactory/ssh-agent@v0.9.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          
+  tasks:          
     - name: Construct cert path
       set_fact:
         ssl_cert_file: "/etc/ssl/certs/{{ landscape_server }}.crt"
