@@ -41,8 +41,9 @@ jobs:
       - name: Create temp directory for cert
         run: |
           mkdir -p certs
-          scp -o StrictHostKeyChecking=no ansible@${{ vars.EC2_PUBLIC_IP }}:/etc/ssl/certs/${{ vars.EC2_PUBLIC_DNS }}.crt certs/landscape.crt
-          scp -o StrictHostKeyChecking=no certs/landscape.crt ansible@${{ vars.CLIENT_PUBLIC_IP }}:/etc/landscape/
+          ssh -o StrictHostKeyChecking=no ansible@${{ vars.EC2_PUBLIC_IP }} "sudo cat /etc/ssl/certs/${{ vars.EC2_PUBLIC_DNS }}.crt" > certs/landscape.crt
+          scp -o StrictHostKeyChecking=no certs/landscape.crt ansible@${{ vars.CLIENT_PUBLIC_IP }}:/tmp/
+          ssh -o StrictHostKeyChecking=no ansible@${{ vars.CLIENT_PUBLIC_IP }} 'sudo cp /tmp/landscape.crt /etc/landscape/'
 
       - name: Configure Client
         run: |
