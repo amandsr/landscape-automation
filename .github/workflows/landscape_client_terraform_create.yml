@@ -92,6 +92,7 @@ jobs:
         working-directory: ./terraform-client
 
       - name: Export Client EC2 DNS to GitHub variable
+        working-directory: ./terraform-client
         run: |
              echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
              terraform output -raw client_public_dns
@@ -99,6 +100,7 @@ jobs:
              gh variable set CLIENT_PUBLIC_DNS --body "$DNS"
 
       - name: Export Client EC2 Public IP to GitHub variable
+        working-directory: ./terraform-client
         run: |
              echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
              terraform output -raw client_public_dns
