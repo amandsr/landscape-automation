@@ -13,7 +13,7 @@
 
     - name: Fetch SSL certificate from landscape_server
       ansible.builtin.shell: |
-        scp -o StrictHostKeyChecking=no {{ landscape_server }}:{{ ssl_cert_file }} {{ temp_cert_local }}
+        scp -o StrictHostKeyChecking=no {{ landscape_server_dns }}:{{ ssl_cert_file }} {{ temp_cert_local }}
       delegate_to: localhost
 
     - name: Copy SSL cert to client
