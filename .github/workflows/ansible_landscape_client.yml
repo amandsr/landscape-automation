@@ -19,10 +19,12 @@ jobs:
           LANDSCAPE_CLIENT_HOSTNAME="${{ vars.CLIENT_PUBLIC_DNS }}"
           LANDSCAPE_CLIENT_IP="${{ vars.CLIENT_PUBLIC_IP }}"
           LANDSCAPE_SERVER="${{ vars.EC2_PUBLIC_IP }}"
+          LANDSCAPE_SERVER_DNS="${{ vars.EC2_PUBLIC_DNS }}"
 
           echo "landscape_client_hostname: $LANDSCAPE_CLIENT_HOSTNAME" >> ansible-landscape/group_vars/client_var.yml
           echo "landscape_client_ip: $LANDSCAPE_CLIENT_IP" >> ansible-landscape/group_vars/client_var.yml
           echo "landscape_server: $LANDSCAPE_SERVER" >> ansible-landscape/group_vars/client_var.yml
+          echo "landscape_server_dns: $LANDSCAPE_SERVER_DNS" >> ansible-landscape/group_vars/client_var.yml          
           echo "$LANDSCAPE_CLIENT_IP ansible_user=ansible" >> ansible-landscape/inventory/client
 
       - name: Setup SSH key
