@@ -15,12 +15,12 @@
         
     - name: Construct cert path
       set_fact:
-        ssl_cert_file: "/etc/ssl/certs/{{ landscape_server }}.crt"
-        temp_cert_local: "/tmp/{{ landscape_server }}.crt"
+        ssl_cert_file: "/etc/ssl/certs/{{ landscape_server_dns }}.crt"
+        temp_cert_local: "/tmp/{{ landscape_server_dns }}.crt"
 
     - name: Fetch SSL certificate from landscape_server
       ansible.builtin.shell: |
-        scp -o StrictHostKeyChecking=no {{ landscape_server_dns }}:{{ ssl_cert_file }} {{ temp_cert_local }}
+        scp -o StrictHostKeyChecking=no {{ landscape_server }}:{{ ssl_cert_file }} {{ temp_cert_local }}
       delegate_to: localhost
 
     - name: Copy SSL cert to client
