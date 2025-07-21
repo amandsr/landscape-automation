@@ -94,7 +94,8 @@ jobs:
       - name: Export EC2 DNS to GitHub variable
         run: |
              echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
-             DNS=$(terraform -chdir=./terraform-client output -raw client_public_dns| cut -d ":" -f1)
+             DNS=$(terraform -chdir=./terraform-client output -raw client_public_dns| cut -d ":" -f1| tr -d '\n')
+             echo ">>>$DNS<<<"
              echo "Public DNS from Terraform: $DNS"
              gh variable set CLIENT_PUBLIC_DNS --body "$DNS"             
 
