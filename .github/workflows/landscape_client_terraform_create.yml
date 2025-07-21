@@ -95,6 +95,10 @@ jobs:
         id: get-client-output
         working-directory: ./terraform-client
         run: |
-          echo "CLIENT_PUBLIC_DNS=$(terraform output -raw client_public_dns)" >> $GITHUB_OUTPUT
-          echo "CLIENT_PUBLIC_IP=$(terraform output -raw client_public_ip)" >> $GITHUB_OUTPUT
+          CLIENT_PUBLIC_DNS=$(terraform output -raw client_public_dns)
+          CLIENT_PUBLIC_IP=$(terraform output -raw client_public_ip)
+    
+          echo "CLIENT_PUBLIC_DNS=$CLIENT_PUBLIC_DNS" >> $GITHUB_OUTPUT
+          echo "CLIENT_PUBLIC_IP=$CLIENT_PUBLIC_IP" >> $GITHUB_OUTPUT
+
 
