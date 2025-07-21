@@ -5,7 +5,13 @@
   vars_files:
     - group_vars/client_var.yml
 
-  tasks:          
+  tasks: 
+    - name: Ensure landscape-client is installed
+      apt:
+        name: landscape-client
+        state: present
+        update_cache: yes
+        
     - name: Construct cert path
       set_fact:
         ssl_cert_file: "/etc/ssl/certs/{{ landscape_server }}.crt"
