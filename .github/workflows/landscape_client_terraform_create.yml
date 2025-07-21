@@ -91,18 +91,10 @@ jobs:
         run: terraform apply -auto-approve -input=false
         working-directory: ./terraform-client
 
-      - name: Export Client EC2 DNS to GitHub variable
+      - name: Get Terraform Output
+        id: get-client-output
         working-directory: ./terraform-client
         run: |
-             echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
-             terraform output -raw client_public_dns
-             DNS=$(terraform output -raw client_public_dns)
-             gh variable set CLIENT_PUBLIC_DNS --body "$DNS"
+          echo "CLIENT_PUBLIC_DNS=$(terraform output -raw client_public_dns)" >> $GITHUB_OUTPUT
+          echo "CLIENT_PUBLIC_IP=$(terraform output -raw client_public_ip)" >> $GITHUB_OUTPUT
 
-      - name: Export Client EC2 Public IP to GitHub variable
-        working-directory: ./terraform-client
-        run: |
-             echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
-             terraform output -raw client_public_dns
-             PUBLIC_IP=$(terraform output -raw client_public_ip)
-             gh variable set CLIENT_PUBLIC_IP --body "$PUBLIC_IP"
