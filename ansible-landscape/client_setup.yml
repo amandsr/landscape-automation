@@ -12,25 +12,6 @@
         name: landscape-client
         state: present
         update_cache: yes
-        
-    - name: Construct cert path
-      set_fact:
-        ssl_cert_file: "/etc/ssl/certs/{{ landscape_server_dns }}.crt"
-        temp_cert_local: "/tmp/{{ landscape_server_dns }}.crt"
-
-    - name: Fetch SSL certificate from landscape_server
-      ansible.builtin.shell: |
-        scp -o StrictHostKeyChecking=no ansible@{{ landscape_server }}:{{ ssl_cert_file }} {{ temp_cert_local }}
-      delegate_to: localhost
-
-    - name: Copy SSL cert to client
-      ansible.builtin.copy:
-        src: "{{ temp_cert_local }}"
-        dest: /etc/landscape/server.crt
-        owner: root
-        group: root
-        mode: '0644'
-      delegate_to: "{{ landscape_client_ip }}"
 
     - name: Run landscape-config on client
       ansible.builtin.shell: |
