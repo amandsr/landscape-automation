@@ -6,14 +6,19 @@
     - group_vars/client_var.yml
 
   tasks:
+    - name: Setup SSH key
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          
     - name: Construct cert path
       set_fact:
-        ssl_cert_file: "/etc/ssl/certs/{{ landscape_client_hostname }}.crt"
-        temp_cert_local: "/tmp/{{ landscape_client_hostname }}.crt"
+        ssl_cert_file: "/etc/ssl/certs/{{ landscape_server }}.crt"
+        temp_cert_local: "/tmp/{{ landscape_server }}.crt"
 
     - name: Fetch SSL certificate from landscape_server
       ansible.builtin.shell: |
-        scp -o StrictHostKeyChecking=no -i /path/to/key.pem ubuntu@{{ landscape_server }}:{{ ssl_cert_file }} {{ temp_cert_local }}
+        scp -o StrictHostKeyChecking=no {{ landscape_server }}:{{ ssl_cert_file }} {{ temp_cert_local }}
       delegate_to: localhost
 
     - name: Copy SSL cert to client
