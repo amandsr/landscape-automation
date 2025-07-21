@@ -95,7 +95,7 @@ jobs:
         run: |
              echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
              terraform -chdir=./terraform-client output -raw client_public_dns
-             DNS=$(terraform -chdir=./terraform-client output -raw client_public_dns| tail -n 1)
+             DNS=$(terraform -chdir=./terraform-client output -raw client_public_dns| cut -d ":" -f1)
              echo "Public DNS from Terraform: $DNS"
              gh variable set CLIENT_PUBLIC_DNS --body "$DNS"             
 
@@ -103,7 +103,7 @@ jobs:
         run: |
              echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
              terraform -chdir=./terraform-client output -raw client_public_ip
-             PUBLIC_IP=$(terraform -chdir=./terraform-client output -raw client_public_ip| tail -n 1)
+             PUBLIC_IP=$(terraform -chdir=./terraform-client output -raw client_public_ip| cut -d ":" -f1)
              echo "Public IP from Terraform: $PUBLIC_IP"
              gh variable set CLIENT_PUBLIC_IP --body "$PUBLIC_IP"
 
