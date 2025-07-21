@@ -73,6 +73,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          terraform_wrapper: false
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -94,10 +96,10 @@ jobs:
       - name: Export EC2 DNS to GitHub variable
         run: |
              echo "${{ secrets.GH_PAT }}" | gh auth login --with-token
-             DNS=$(terraform -chdir=./terraform-client output -raw client_public_dns| cut -d ":" -f1)
+             DNS=$(terraform -chdir=./terraform-client output -raw client_public_dns)
              echo ">>>$DNS<<<"
              echo "Public DNS from Terraform: $DNS"
-             gh variable set CLIENT_PUBLIC_DNS --body "$DNS"             
+             gh variable set CLIENT_PUBLIC_DNS --body "$DNS"
 
       - name: Export EC2 Public IP to GitHub variable
         run: |
