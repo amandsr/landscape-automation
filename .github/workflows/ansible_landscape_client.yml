@@ -42,5 +42,5 @@ jobs:
           export LANDSCAPE_ACCOUNT_NAME=standalone
           export LANDSCAPE_FQDN=${{ vars.CLIENT_PUBLIC_IP }}
           export LANDSCAPE_COMPUTER_TITLE=${{ vars.CLIENT_PUBLIC_DNS }}
-          ansible-playbook -i ansible-landscape/inventory/client ansible-landscape/client.yml
+          ansible-playbook -i ansible-landscape/inventory/client ansible-landscape/client_setup.yml
           
