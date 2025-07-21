@@ -1,4 +1,4 @@
-name: 'Landscape Client Ansible Provision Workflow'
+name: 'Landscape Client Ansible Registration Workflow'
     
 on:
   workflow_dispatch:
