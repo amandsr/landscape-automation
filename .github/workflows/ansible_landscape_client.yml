@@ -1,4 +1,4 @@
-name: 'Landscape Client Ansible Provision Workflow'
+ name: 'Landscape Client Ansible Provision Workflow'
     
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ jobs:
           echo "landscape_client_hostname: $LANDSCAPE_CLIENT_HOSTNAME" >> ansible-landscape/group_vars/client_var.yml
           echo "landscape_client_ip: $LANDSCAPE_CLIENT_IP" >> ansible-landscape/group_vars/client_var.yml
           echo "landscape_server: $LANDSCAPE_SERVER" >> ansible-landscape/group_vars/client_var.yml
-          echo "$LANDSCAPE_CLIENT_IP" >> ansible-landscape/inventory/client
+          echo "$LANDSCAPE_CLIENT_IP ansible_user=ansible" >> ansible-landscape/inventory/client
 
       - name: Setup SSH key
         uses: webfactory/ssh-agent@v0.9.1
