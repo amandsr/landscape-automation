@@ -15,21 +15,21 @@ permissions:
 
 jobs:
   check-terraform-create:
-    name: Check "Landscape Client Provisioning" Success
+    name: Check "Landscape Client Terraform Create Workflow" Success
     runs-on: ubuntu-latest
     steps:
-      - name: Check last successful run of "Landscape Client Provisioning"
+      - name: Check last successful run of "Landscape Client Terraform Create Workflow"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Checking last successful run of 'Landscape Client Provisioning'"
+          echo "Checking last successful run of 'Landscape Client Terraform Create Workflow'"
           gh run list \
             --repo "${{ github.repository }}" \
-            --workflow="Landscape Client Provisioning" \
+            --workflow="Landscape Client Terraform Create Workflow" \
             --limit 1 \
             --json status,conclusion \
             --jq '.[0] | select(.status == "completed" and .conclusion == "success")' || {
-            echo "❌ Last run of Landscape Client Provisioning did not succeed."
+            echo "❌ Last run of Landscape Client Terraform Create Workflow did not succeed."
             exit 1
             }
 
