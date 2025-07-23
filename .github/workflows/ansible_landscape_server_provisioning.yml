@@ -1,7 +1,12 @@
 name: 'Landscape Server Ansible Provision Workflow'
     
+#on:
+#  workflow_dispatch:
 on:
-  workflow_dispatch:
+  workflow_run:
+    workflows: ["Landscape Server Terraform Create Workflow"]  # must match the `name:` of Workflow A
+    types:
+      - completed
   
 permissions:
   actions: write
